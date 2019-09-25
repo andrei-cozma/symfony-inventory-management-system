@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Product;
+use App\Form\ProductType;
 use App\Repository\ProductRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -29,21 +30,27 @@ class ProductController extends AbstractController
     /**
      * @Route("/create", name="create")
      * @param Request $request
-     * @return \Symfony\Component\HttpFoundation\RedirectResponse
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse|Response
      */
     public function create(Request $request)
     {
         $product = new Product();
 
-        $product->setName('product name');
+        $form = $this->createForm(ProductType::class, $product);
 
-        // entity manager
-        $em = $this->getDoctrine()->getManager();
+        $form->handleRequest($request);
 
-        $em->persist($product);
-        $em->flush();
+        if ($form->isSubmitted()){
+            $em = $this->getDoctrine()->getManager();
+            $em->persist($product);
+            $em->flush();
 
-        return $this->redirect($this->generateUrl('product.index'));
+            return $this->redirect($this->generateUrl('product.index'));
+        }
+
+        return $this->render('product/create.html.twig', [
+            'form' => $form->createView()
+        ]);
     }
 
     /**
