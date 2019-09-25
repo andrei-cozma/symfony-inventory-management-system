@@ -23,17 +23,13 @@ class ProductController extends AbstractController
     {
         $products = $productRepository->findAll();
 
-        dump($products);
-
-        return $this->render('product/index.html.twig', [
-            'controller_name' => 'ProductController',
-        ]);
+        return $this->render('product/index.html.twig', compact('products'));
     }
 
     /**
      * @Route("/create", name="create")
      * @param Request $request
-     * @return Response
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse
      */
     public function create(Request $request)
     {
@@ -47,8 +43,32 @@ class ProductController extends AbstractController
         $em->persist($product);
         $em->flush();
 
-        return new Response('product was created');
+        return $this->redirect($this->generateUrl('product.index'));
+    }
 
+    /**
+     * @Route("/show/{id}", name="show")
+     * @param Product $product
+     * @return Response
+     */
+    public function show(Product $product)
+    {
+        return $this->render('product/show.html.twig', compact('product'));
+    }
 
+    /**
+     * @Route("/delete/{id}", name="delete")
+     * @param Product $product
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse
+     */
+    public function remove(Product $product)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $em->remove($product);
+        $em->flush();
+
+        $this->addFlash('success', 'Product was deleted.');
+
+        return $this->redirect($this->generateUrl('product.index'));
     }
 }

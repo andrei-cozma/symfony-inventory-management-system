@@ -29,7 +29,7 @@ class Product
     /**
      * @ORM\Column(type="float", nullable=true)
      */
-    private $selling_price;
+    private $sellingPrice;
 
     public function getId(): ?int
     {
@@ -62,12 +62,12 @@ class Product
 
     public function getSellingPrice(): ?float
     {
-        return $this->selling_price;
+        return $this->sellingPrice;
     }
 
-    public function setSellingPrice(?float $selling_price): self
+    public function setSellingPrice(?float $sellingPrice): self
     {
-        $this->selling_price = $selling_price;
+        $this->sellingPrice = $sellingPrice;
 
         return $this;
     }
