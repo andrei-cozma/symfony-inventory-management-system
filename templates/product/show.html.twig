@@ -6,9 +6,12 @@
         <div class="col">
             <h1>{{ product.name }}</h1>
 
+            <em>Category: {{ product.category }}</em>
+
             <p><strong>Id:</strong> {{ product.id }}</p>
             <p><strong>Description:</strong> {{ product.description }}</p>
             <p><strong>Selling price:</strong> {{ product.sellingPrice }}</p>
+            <p><img src="{{ '/uploads/' ~ product.image }}" alt="{{ product.name }}"></p>
         </div>
     </div>
 

@@ -5,7 +5,9 @@ namespace App\Controller;
 use App\Entity\Product;
 use App\Form\ProductType;
 use App\Repository\ProductRepository;
+use App\Services\ImageUploader;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -30,9 +32,10 @@ class ProductController extends AbstractController
     /**
      * @Route("/create", name="create")
      * @param Request $request
+     * @param ImageUploader $imageUploader
      * @return \Symfony\Component\HttpFoundation\RedirectResponse|Response
      */
-    public function create(Request $request)
+    public function create(Request $request, ImageUploader $imageUploader)
     {
         $product = new Product();
 
@@ -41,6 +44,13 @@ class ProductController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted()){
+            /** @var UploadedFile $image */
+            $image = $request->files->get('product')['image'];
+            if ($image) {
+                $filename = $imageUploader->uploadImage($image);
+
+                $product->setImage($filename);
+            }
             $em = $this->getDoctrine()->getManager();
             $em->persist($product);
             $em->flush();

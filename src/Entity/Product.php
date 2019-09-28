@@ -22,6 +22,11 @@ class Product
     private $name;
 
     /**
+     * @ORM\Column(type="string", length=255)
+     */
+    private $image;
+
+    /**
      * @ORM\Column(type="text", nullable=true)
      */
     private $description;
@@ -30,6 +35,11 @@ class Product
      * @ORM\Column(type="float", nullable=true)
      */
     private $sellingPrice;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\Category", inversedBy="product")
+     */
+    private $category;
 
     public function getId(): ?int
     {
@@ -68,6 +78,30 @@ class Product
     public function setSellingPrice(?float $sellingPrice): self
     {
         $this->sellingPrice = $sellingPrice;
+
+        return $this;
+    }
+
+    public function getImage(): ?string
+    {
+        return $this->image;
+    }
+
+    public function setImage(string $image): self
+    {
+        $this->image = $image;
+
+        return $this;
+    }
+
+    public function getCategory(): ?Category
+    {
+        return $this->category;
+    }
+
+    public function setCategory(?Category $category): self
+    {
+        $this->category = $category;
 
         return $this;
     }
